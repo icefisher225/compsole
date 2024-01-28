@@ -7,6 +7,7 @@ import (
 	"github.com/BradHacker/compsole/compsole/providers/openstack"
 	"github.com/BradHacker/compsole/compsole/utils"
 	"github.com/BradHacker/compsole/ent"
+	"github.com/icefisher225/compsole/providers/proxmox"
 )
 
 type CompsoleProvider interface {
@@ -26,6 +27,8 @@ func NewProvider(providerType string, config string) (provider CompsoleProvider,
 	switch providerType {
 	case openstack.ID:
 		return openstack.NewOpenstackProvider(config)
+	case proxmox.ID:
+		return proxmox.NewProxmoxProvider(config)
 	default:
 		err = fmt.Errorf("invalid provider type")
 		return
@@ -37,6 +40,9 @@ func ValidateConfig(providerType string, config string) error {
 	case openstack.ID:
 		var openstackConfig openstack.OpenstackConfig
 		return json.Unmarshal([]byte(config), &openstackConfig)
+	case proxmox.ID:
+		var proxmoxConfig proxmox.ProxmoxConfig
+		return json.Unmarshal([]byte(config), &proxmoxConfig)
 	default:
 		return fmt.Errorf("invalid provider type")
 	}
